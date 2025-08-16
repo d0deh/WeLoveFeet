@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oxcy and Grimbly's Gallery</title>
+  <style>
+    body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #4b0082, #32cd32);
+  color: #fff;
+}
+
+    h1 {
+      text-align: center;
+      margin: 20px;
+    }
+
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .filter-bar button {
+      padding: 8px 16px;
+      background-color: #2e7d47;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .filter-bar button.active {
+      background-color: #66bb6a;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 1400px;
+      margin: auto;
+    }
+
+    .card {
+      background-color: #1e4d34;
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      border-color: #66bb6a;
+    }
+
+    .card img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card .name {
+      padding: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      width: 100%;
+    }
+
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Oxcy and Grimbly's Gallery</h1>
+
+  <div class="filter-bar">
+    <button data-role="All" class="active">All</button>
+    <button data-role="Duelist">Duelist</button>
+    <button data-role="Initiator">Initiator</button>
+    <button data-role="Sentinel">Sentinel</button>
+    <button data-role="Controller">Controller</button>
+  </div>
+
+  
+<div class="gallery" id="gallery"></div>
+
+  <div class="lightbox" id="lightbox">
+    <img id="lightbox-img" src="" alt="Agent Image">
+  </div>
+
+  <script>
+    const agents = [
+      { name: "Viper", role: "Controller", color: "#4caf50", img: "https://i.imgur.com/8CLG4y8.jpg" },
+      { name: "Omen", role: "Controller", color: "#3f51b5", img: "https://i.imgur.com/V6icl2s.jpg" },
+      { name: "Cypher", role: "Sentinel", color: "#795548", img: "https://i.imgur.com/AK3OHdC.jpg" },
+      { name: "Sova", role: "Initiator", color: "#2196f3", img: "https://i.imgur.com/qWsG4DZ.jpg" },
+      { name: "Sage", role: "Sentinel", color: "#b2dfdb", img: "https://i.imgur.com/Nfzewdv.jpg" },
+      { name: "Phoenix", role: "Duelist", color: "#ff5722", img: "https://i.imgur.com/SwM7u8q.jpg" },
+      { name: "Jett", role: "Duelist", color: "#81d4fa", img: "https://i.imgur.com/xLu4kaH.jpg" },
+      { name: "Raze", role: "Duelist", color: "#fdd835", img: "https://i.imgur.com/s1UrOgq.jpg" },
+      { name: "Breach", role: "Initiator", color: "#ef6c00", img: "https://i.imgur.com/aWavLzr.jpg" },
+      { name: "Reyna", role: "Duelist", color: "#9c27b0", img: "https://i.imgur.com/UZ5nq8x.jpg" },
+      { name: "Killjoy", role: "Sentinel", color: "#ffee58" },
+      { name: "Skye", role: "Initiator", color: "#8bc34a", img: "https://i.imgur.com/JUNCJov.jpg" },
+      { name: "Yoru", role: "Duelist", color: "#1565c0", img: "https://i.imgur.com/G7gTAN3.jpg" },
+      { name: "Astra", role: "Controller", color: "#512da8", img: "https://i.imgur.com/ljJ39HT.jpg" },
+      { name: "KAY/O", role: "Initiator", color: "#607d8b", img: "https://i.imgur.com/Bi99fOX.jpg" },
+      { name: "Chamber", role: "Sentinel", color: "#fbc02d", img: "https://i.imgur.com/1aRxVjp.jpg" },
+      { name: "Neon", role: "Duelist", color: "#00bcd4", img: "https://i.imgur.com/Mkd7F6t.jpg" },
+      { name: "Fade", role: "Initiator", color: "#4e342e", img: "https://i.imgur.com/Flpz3Y1.jpg" },
+      { name: "Harbor", role: "Controller", color: "#0277bd", img: "https://i.imgur.com/gR4Opoy.jpg" },
+      { name: "Gekko", role: "Initiator", color: "#cddc39", img: "https://i.imgur.com/eBuVtdP.jpg" },
+      { name: "Deadlock", role: "Sentinel", color: "#9e9e9e" },
+      { name: "Iso", role: "Duelist", color: "#673ab7", img: "https://i.imgur.com/1IDVG5u.jpg" },
+      { name: "Clove", role: "Controller", color: "#d32f2f", img: "https://i.imgur.com/T9BNvxX.jpg" },
+      { name: "Vyse", role: "Sentinel", color: "#009688" },
+      { name: "Tejo", role: "Initiator", color: "#3f704d" },
+      { name: "Waylay", role: "Duelist", color: "#c2185b", img: "https://i.imgur.com/cY8z7Lm.jpg" },
+      { name: "Brimstone", role: "Controller", color: "#ff9800", img: "https://i.imgur.com/2GzX2zh.jpg" }
+    ];
+
+    const gallery = document.getElementById("gallery");
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+
+    function renderGallery(filter = "All") {
+      gallery.innerHTML = "";
+      const filtered = filter === "All" ? agents : agents.filter(a => a.role === filter);
+      filtered.forEach(agent => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.backgroundColor = agent.color;
+
+        const img = document.createElement("img");
+        img.src = agent.img || `images/${agent.name.toLowerCase()}.jpg`;
+        img.alt = agent.name;
+        img.onerror = () => img.src = "https://via.placeholder.com/900x500?text=" + agent.name;
+
+        const name = document.createElement("div");
+        name.className = "name";
+        name.textContent = agent.name;
+
+        card.appendChild(img);
+        card.appendChild(name);
+
+        card.addEventListener("click", () => {
+          lightboxImg.src = img.src;
+          lightbox.style.display = "flex";
+        });
+
+        gallery.appendChild(card);
+      });
+    }
+
+    document.querySelectorAll(".filter-bar button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-bar button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderGallery(btn.dataset.role);
+      });
+    });
+
+    lightbox.addEventListener("click", () => {
+      lightbox.style.display = "none";
+    });
+
+renderGallery();
+  </script>
+</body>
+</html>
