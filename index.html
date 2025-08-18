@@ -4,6 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Oxcy and Grimbly's Gallery</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7T87912F6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-R7T87912F6');
+  </script>
   <style>
     body {
   margin: 0;
@@ -111,8 +120,7 @@
     <button data-role="Controller">Controller</button>
   </div>
 
-  
-<div class="gallery" id="gallery"></div>
+  <div class="gallery" id="gallery"></div>
 
   <div class="lightbox" id="lightbox">
     <img id="lightbox-img" src="" alt="Agent Image">
@@ -194,8 +202,7 @@
       lightbox.style.display = "none";
     });
 
-renderGallery();
+    renderGallery();
   </script>
 </body>
 </html>
-
